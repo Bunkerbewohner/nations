@@ -14,3 +14,13 @@ body {
     flex: 1;
     background: #4c4c4c;
 }
+
+#ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 8px 8px;
+}
