@@ -45,7 +45,7 @@ function Grid() {
     const tiles = [];
     for (let x = -10; x < 10; x++) {
         for (let y = -10; y < 10; y++) {
-            tiles.push(<Tile position={[x, y, 0] as any}/>);
+            tiles.push(<Tile key={`tile-${x}-${y}`} position={[x, y, 0] as any}/>);
         }
     }
 
