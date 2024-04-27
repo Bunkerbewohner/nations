@@ -157,7 +157,7 @@ export function Terrain() {
     const [grass1, grass2, mud, clif, rock] = useSurfaces();
 
     return (
-        <mesh scale={0.035} rotation={[(-1 * Math.PI) / 2, 0, (-3.35 * Math.PI) / 2]}>
+        <mesh scale={0.035} position={[0, -0.15, 0]} rotation={[(-1 * Math.PI) / 2, 0, (-3.35 * Math.PI) / 2]}>
             {/*<MartiniGeometry displacementMap={heightmap} error={10} mobileError={100}/>*/}
             <planeBufferGeometry args={[1024, 1024, 2 ** 9, 2 ** 9]} ref={geometry => {
                 if (geometry) {

@@ -1,11 +1,12 @@
 import {createRoot} from 'react-dom/client'
 import React, {Suspense, useRef, useState} from 'react'
 import {Canvas, useFrame, useThree} from '@react-three/fiber'
-import {Environment, FlyControls, OrbitControls, PerspectiveCamera, ScrollControls} from '@react-three/drei'
+import {Environment, FlyControls, OrbitControls, PerspectiveCamera, ScrollControls, Sky} from '@react-three/drei'
 import environmentMap from './assets/example-terrain/rooitou_park_4k.hdr';
 
 import './index.css';
 import {Terrain} from "./map/Terrain";
+import {Ocean} from "./map/Ocean";
 
 const TileRadius = 1;
 
@@ -71,12 +72,14 @@ function App() {
 
 
     return <>
-        <Environment files={environmentMap} background={false} />
+        <Environment files={environmentMap} background={false}/>
         <OrbitControls/>
         <PerspectiveCamera makeDefault rotation={cameraRotation} position={cameraPosition}/>
         <ambientLight intensity={0.15}/>
         {/*<directionalLight position={[0, 10, 10]} color={'#b7b2af'} intensity={1.3}/>*/}
         <Terrain/>
+        <Ocean/>
+        <Sky scale={1000} sunPosition={[500, 150, -1000]} turbidity={0.1} />
         {/*<Grid/>*/}
     </>;
 }
@@ -84,7 +87,7 @@ function App() {
 
 createRoot(document.getElementById('root')!).render(
     <Suspense fallback={<div>Wait</div>}>
-        <Canvas frameloop={"demand"}>
+        <Canvas frameloop={"always"}>
             <App/>
         </Canvas>
     </Suspense>,
