@@ -1,9 +1,11 @@
 import {createRoot} from 'react-dom/client'
-import React, {useRef, useState} from 'react'
+import React, {Suspense, useRef, useState} from 'react'
 import {Canvas, useFrame, useThree} from '@react-three/fiber'
-import {OrbitControls, PerspectiveCamera} from '@react-three/drei'
+import {Environment, FlyControls, OrbitControls, PerspectiveCamera, ScrollControls} from '@react-three/drei'
+import environmentMap from './assets/example-terrain/rooitou_park_4k.hdr';
 
 import './index.css';
+import {Terrain} from "./map/Terrain";
 
 const TileRadius = 1;
 
@@ -23,7 +25,7 @@ function Tile(props: TileProps) {
         : (hovered ? '#a2eaac' : '#fff8e1');
 
     const position = [
-        3/4 * TileRadius * props.position[0] * 2,
+        3 / 4 * TileRadius * props.position[0] * 2,
         Math.sqrt(3) * TileRadius * props.position[1] + (props.position[0] % 2) * Math.sqrt(3) / 2 * TileRadius,
         0
     ]
@@ -36,7 +38,8 @@ function Tile(props: TileProps) {
             onPointerOver={(event) => setHover(true)}
             onPointerOut={(event) => setHover(false)}>
             <circleGeometry args={[TileRadius * 0.99, 6]}/>
-            <meshStandardMaterial color={color}/>
+            <meshStandardMaterial color={color} wireframe={false}
+                                  opacity={0.2} transparent={true} depthWrite={false} depthTest={false}/>
         </mesh>
     )
 }
@@ -50,7 +53,7 @@ function Grid() {
     }
 
     return (
-        <group>
+        <group position={[0, 0, 1]}>
             {tiles}
         </group>
     )
@@ -59,7 +62,7 @@ function Grid() {
 // const cameraRotation = [0, 0, MathUtils.deg2Rad()] as any;
 // Rotate camera to look from top down
 const cameraRotation = [0, 0, 0] as any;
-const cameraPosition = [0, 0, 17] as any;
+const cameraPosition = [0, 17, 0] as any;
 
 function App() {
     useThree(({camera}) => {
@@ -68,17 +71,21 @@ function App() {
 
 
     return <>
-        {/*<OrbitControls />*/}
+        <Environment files={environmentMap} background={false} />
+        <OrbitControls/>
         <PerspectiveCamera makeDefault rotation={cameraRotation} position={cameraPosition}/>
-        <ambientLight intensity={Math.PI / 2}/>
-        <directionalLight position={[0, 10, 10]} color={'white'} intensity={Math.PI}/>
-        <Grid/>
+        <ambientLight intensity={0.15}/>
+        {/*<directionalLight position={[0, 10, 10]} color={'#b7b2af'} intensity={1.3}/>*/}
+        <Terrain/>
+        {/*<Grid/>*/}
     </>;
 }
 
 
 createRoot(document.getElementById('root')!).render(
-    <Canvas>
-        <App/>
-    </Canvas>,
+    <Suspense fallback={<div>Wait</div>}>
+        <Canvas frameloop={"demand"}>
+            <App/>
+        </Canvas>
+    </Suspense>,
 )
